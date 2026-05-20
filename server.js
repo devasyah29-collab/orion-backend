@@ -5,7 +5,7 @@ const cors = require('cors');
 const app = express();
 
 // Konfigurasi batas ukuran JSON ke 50mb karena kita mengirim gambar base64
-app.use(cors({ origin: 'https://orion-frontend-rho.vercel.app/' }));
+app.use(cors({ origin: 'https://orion-frontend-rho.vercel.app' }));
 app.use(express.json({ limit: '50mb' })); 
 
 // Endpoint untuk Generate Image/Text ke Gemini
