@@ -9,19 +9,17 @@ app.use(cors({ origin: 'https://orion-frontend-rho.vercel.app' }));
 app.use(express.json({ limit: '50mb' })); 
 
 // Endpoint untuk Generate Image/Text ke Gemini
+// Ganti bagian app.post('/api/gemini', ...) di server.js Anda dengan ini:
 app.post('/api/gemini', async (req, res) => {
     try {
-        // Ambil payload/data dari frontend (React)
         const payload = req.body;
-        
-        // Ambil API Key secara aman dari environment variable server
         const apiKey = process.env.GEMINI_API_KEY;
         
-        // URL asli Google Gemini
-        // (Anda bisa membuat endpoint spesifik untuk text dan image jika diperlukan)
-        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+        // MENERIMA MODEL DINAMIS DARI FRONTEND (Default ke model teks jika kosong)
+        const model = req.query.model || 'gemini-2.5-flash-preview-09-2025';
+        
+        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
-        // Lakukan fetch dari backend ke Google
         const response = await fetch(geminiUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -29,8 +27,6 @@ app.post('/api/gemini', async (req, res) => {
         });
 
         const data = await response.json();
-        
-        // Kembalikan hasilnya ke Frontend (React)
         res.json(data);
 
     } catch (error) {
